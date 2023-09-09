@@ -1,0 +1,23 @@
+{
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "search.exclude": {
+    "package-lock.json": true,
+    "yarn.lock": true,
+    "pnpm-lock.yaml": true
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  // Multiple language settings for json and jsonc files
+  "[json][jsonc][javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Conventional Commits
+  "conventionalCommits.autoCommit": false,
+  // TS
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

@@ -1,0 +1,55 @@
+{
+  "name": "@kraftend/directus-typegen",
+  "version": "1.0.0",
+  "description": "a Directus helper that generates typescript types for your instance.",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "directus-typegen": "./dist/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kraftend/directus-typegen.git"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Cemre Inanc <cemreinanc@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@directus/shared": "^9.24.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@types/fs-extra": "^11.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@commander-js/extra-typings": "^11.0.0",
+    "axios": "^1.5.0",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.1"
+  }
+}
