@@ -1,10 +1,10 @@
-import type { Collection as DirectusCollection, Relation } from '@directus/shared/types';
-import type { AxiosInstance } from 'axios';
+import type { Collection as DirectusCollection, Relation } from "@directus/shared/types";
+import type { AxiosInstance } from "axios";
 
-import type { Collections, Field } from '@/types';
+import type { Collections, Field } from "@/types";
 
 export async function getCollections(api: AxiosInstance) {
-  const collectionsRes = await api.get<{ data: DirectusCollection[] }>('/collections?limit=-1');
+  const collectionsRes = await api.get<{ data: DirectusCollection[] }>("/collections?limit=-1");
   const rawCollections = collectionsRes.data.data;
   const collections: Collections = {};
 
@@ -12,7 +12,7 @@ export async function getCollections(api: AxiosInstance) {
     .sort((a, b) => a.collection.localeCompare(b.collection))
     .forEach((collection) => (collections[collection.collection] = { ...collection, fields: [] }));
 
-  const fieldsRes = await api.get<{ data: Field[] }>('/fields?limit=-1');
+  const fieldsRes = await api.get<{ data: Field[] }>("/fields?limit=-1");
   const fields = fieldsRes.data.data;
 
   fields
@@ -29,7 +29,7 @@ export async function getCollections(api: AxiosInstance) {
     if (collections[key]?.fields.length === 0) delete collections[key];
   });
 
-  const relationsRes = await api.get<{ data: Relation[] }>('/relations?limit=-1');
+  const relationsRes = await api.get<{ data: Relation[] }>("/relations?limit=-1");
   const relations = relationsRes.data.data;
 
   relations.forEach((relation) => {
@@ -49,12 +49,12 @@ export async function getCollections(api: AxiosInstance) {
 
     if (oneField)
       oneField.relation = {
-        type: 'many',
+        type: "many",
         collection: relation.meta.many_collection,
       };
     if (manyField)
       manyField.relation = {
-        type: 'one',
+        type: "one",
         collection: relation.meta.one_collection!,
       };
   });

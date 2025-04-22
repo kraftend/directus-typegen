@@ -1,11 +1,11 @@
 import type {
   Collection as DirectusCollection,
   Field as DirectusField,
-} from '@directus/shared/types';
+} from "@directus/shared/types";
 
 export type Field = DirectusField & {
   relation?: {
-    type: 'many' | 'one';
+    type: "many" | "one";
     collection: string;
   };
 };
