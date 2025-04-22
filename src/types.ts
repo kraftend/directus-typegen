@@ -1,7 +1,4 @@
-import type {
-  Collection as DirectusCollection,
-  Field as DirectusField,
-} from "@directus/shared/types";
+import type { Collection as DirectusCollection, Field as DirectusField } from "@directus/types";
 
 export type Field = DirectusField & {
   relation?: {

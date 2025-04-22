@@ -1,11 +1,11 @@
-import type { Collection as DirectusCollection, Relation } from "@directus/shared/types";
-import type { AxiosInstance } from "axios";
+import type { Collection as DirectusCollection, Relation } from "@directus/types";
 
-import type { Collections, Field } from "@/types";
+import type { ApiClient } from "~/index";
+import type { Collections, Field } from "~/types";
 
-export async function getCollections(api: AxiosInstance) {
-  const collectionsRes = await api.get<{ data: DirectusCollection[] }>("/collections?limit=-1");
-  const rawCollections = collectionsRes.data.data;
+export async function getCollections(api: ApiClient) {
+  const collectionsRes = await api.get<DirectusCollection[]>("/collections?limit=-1");
+  const rawCollections = collectionsRes.data;
   const collections: Collections = {};
 
   for (const collection of rawCollections.sort((a, b) =>
@@ -14,13 +14,13 @@ export async function getCollections(api: AxiosInstance) {
     collections[collection.collection] = { ...collection, fields: [] };
   }
 
-  const fieldsRes = await api.get<{ data: Field[] }>("/fields?limit=-1");
-  const fields = fieldsRes.data.data;
+  const fieldsRes = await api.get<Field[]>("/fields?limit=-1");
+  const fields = fieldsRes.data;
 
   for (const field of fields.sort((a, b) => a.field.localeCompare(b.field))) {
     if (!collections[field.collection]) {
       console.warn(`${field.collection} not found`);
-      return;
+      continue;
     }
     collections[field.collection]?.fields.push(field);
   }
@@ -29,15 +29,15 @@ export async function getCollections(api: AxiosInstance) {
     if (collections[key]?.fields.length === 0) delete collections[key];
   }
 
-  const relationsRes = await api.get<{ data: Relation[] }>("/relations?limit=-1");
-  const relations = relationsRes.data.data;
+  const relationsRes = await api.get<Relation[]>("/relations?limit=-1");
+  const relations = relationsRes.data;
 
   for (const relation of relations) {
     if (!relation.meta) {
       console.warn(
         `Relation on field '${relation.field}' in collection '${relation.collection}' has no meta. Maybe missing a relation inside directus_relations table.`,
       );
-      return;
+      continue;
     }
 
     const oneField = collections[relation.meta.one_collection!]?.fields.find(

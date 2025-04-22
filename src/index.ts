@@ -1,8 +1,11 @@
-import axios from "axios";
-import { writeFile } from "fs-extra";
+import fs from "fs-extra";
 
-import { generateTypes } from "@/generate-types";
-import { getCollections } from "@/get-collections";
+import { generateTypes } from "~/generate-types";
+import { getCollections } from "~/get-collections";
+
+export type ApiClient = {
+  get: <T>(url: string) => Promise<{ data: T }>;
+};
 
 export async function generateDirectusSchema(
   url?: string,
@@ -16,20 +19,28 @@ export async function generateDirectusSchema(
     throw new Error("Please provide a url and token");
   }
 
-  const api = axios.create({
-    baseURL,
-    headers: {
-      Authorization: `Bearer ${apiToken}`,
+  const api: ApiClient = {
+    get: async <T>(url: string) => {
+      const response = await fetch(`${baseURL}${url}`, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return (await response.json()) as T;
     },
-  });
+  };
 
   const collections = await getCollections(api);
   if (!collections) {
     throw new Error("No collections found");
   }
-  const types = generateTypes(collections);
-  if (!types) {
+
+  const generatedTypes = generateTypes(collections);
+  if (!generatedTypes) {
     throw new Error("No types found");
   }
-  await writeFile(out, types, "utf-8");
+  await fs.writeFile(out, generatedTypes, "utf-8");
 }

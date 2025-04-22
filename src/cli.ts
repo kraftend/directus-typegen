@@ -2,7 +2,7 @@
 import { Command } from "@commander-js/extra-typings";
 import pkg from "package.json";
 
-import { generateDirectusSchema } from "@/index";
+import { generateDirectusSchema } from "~/index";
 
 const program = new Command();
 

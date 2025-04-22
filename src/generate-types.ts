@@ -14,7 +14,7 @@ export function generateTypes(collections: Collections, useIntersectionTypes = f
     );
     ret += `export interface ${typeName} {\n`;
     for (const field of collection.fields) {
-      if (field.meta?.interface?.startsWith("presentation-")) return;
+      if (field.meta?.interface?.startsWith("presentation-")) continue;
       ret += "  ";
       ret += field.field.includes("-") ? `"${field.field}"` : field.field;
       if (field.schema?.is_nullable) ret += "?";
@@ -28,6 +28,8 @@ export function generateTypes(collections: Collections, useIntersectionTypes = f
   ret += `export interface Schema {\n${types.map((x) => `  ${x};`).join("\n")}\n};`;
 
   ret += "\n";
+
+  console.log("ret:", ret);
 
   return ret;
 }
