@@ -19,11 +19,17 @@ export async function generateDirectusSchema(
   const api = axios.create({
     baseURL,
     headers: {
-      Authorization: "Bearer " + apiToken,
+      Authorization: `Bearer ${apiToken}`,
     },
   });
 
   const collections = await getCollections(api);
+  if (!collections) {
+    throw new Error("No collections found");
+  }
   const types = generateTypes(collections);
+  if (!types) {
+    throw new Error("No types found");
+  }
   await writeFile(out, types, "utf-8");
 }

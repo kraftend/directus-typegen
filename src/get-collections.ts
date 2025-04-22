@@ -8,31 +8,31 @@ export async function getCollections(api: AxiosInstance) {
   const rawCollections = collectionsRes.data.data;
   const collections: Collections = {};
 
-  rawCollections
-    .sort((a, b) => a.collection.localeCompare(b.collection))
-    .forEach((collection) => (collections[collection.collection] = { ...collection, fields: [] }));
+  for (const collection of rawCollections.sort((a, b) =>
+    a.collection.localeCompare(b.collection),
+  )) {
+    collections[collection.collection] = { ...collection, fields: [] };
+  }
 
   const fieldsRes = await api.get<{ data: Field[] }>("/fields?limit=-1");
   const fields = fieldsRes.data.data;
 
-  fields
-    .sort((a, b) => a.field.localeCompare(b.field))
-    .forEach((field) => {
-      if (!collections[field.collection]) {
-        console.warn(`${field.collection} not found`);
-        return;
-      }
-      collections[field.collection]?.fields.push(field);
-    });
+  for (const field of fields.sort((a, b) => a.field.localeCompare(b.field))) {
+    if (!collections[field.collection]) {
+      console.warn(`${field.collection} not found`);
+      return;
+    }
+    collections[field.collection]?.fields.push(field);
+  }
 
-  Object.keys(collections).forEach((key) => {
+  for (const key of Object.keys(collections)) {
     if (collections[key]?.fields.length === 0) delete collections[key];
-  });
+  }
 
   const relationsRes = await api.get<{ data: Relation[] }>("/relations?limit=-1");
   const relations = relationsRes.data.data;
 
-  relations.forEach((relation) => {
+  for (const relation of relations) {
     if (!relation.meta) {
       console.warn(
         `Relation on field '${relation.field}' in collection '${relation.collection}' has no meta. Maybe missing a relation inside directus_relations table.`,
@@ -57,7 +57,7 @@ export async function getCollections(api: AxiosInstance) {
         type: "one",
         collection: relation.meta.one_collection!,
       };
-  });
+  }
 
   return collections;
 }

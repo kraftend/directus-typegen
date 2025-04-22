@@ -4,7 +4,7 @@ export function generateTypes(collections: Collections, useIntersectionTypes = f
   let ret = "// This file is auto-generated. Do not edit.\n\n";
   const types: string[] = [];
 
-  Object.values(collections).forEach((collection) => {
+  for (const collection of Object.values(collections)) {
     const collectionName = collection.collection;
     const typeName = pascalCase(collectionName);
     types.push(
@@ -13,7 +13,7 @@ export function generateTypes(collections: Collections, useIntersectionTypes = f
         : `${collectionName}: ${typeName}`,
     );
     ret += `export interface ${typeName} {\n`;
-    collection.fields.forEach((field) => {
+    for (const field of collection.fields) {
       if (field.meta?.interface?.startsWith("presentation-")) return;
       ret += "  ";
       ret += field.field.includes("-") ? `"${field.field}"` : field.field;
@@ -21,11 +21,11 @@ export function generateTypes(collections: Collections, useIntersectionTypes = f
       ret += ": ";
       ret += getType(field, useIntersectionTypes);
       ret += ";\n";
-    });
+    }
     ret += "};\n\n";
-  });
+  }
 
-  ret += "export interface Schema {\n" + types.map((x) => `  ${x};`).join("\n") + "\n};";
+  ret += `export interface Schema {\n${types.map((x) => `  ${x};`).join("\n")}\n};`;
 
   ret += "\n";
 
@@ -60,7 +60,7 @@ function getType(field: Field, useIntersectionTypes = false) {
     if (field.relation && useIntersectionTypes) {
       type = `(${type}) | null`;
     } else {
-      type += ` | null`;
+      type += " | null";
     }
   }
   return type;
